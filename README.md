@@ -1,2 +1,30 @@
-# -getdjson
-Free DJSON generator that creates valid Digital JSON files from basic business inputs; feeds leads into the audit funnel.
+
+# GetDJSON — Free Digital JSON Generator
+
+GetDJSON is a free tool that generates a valid Digital JSON (DJSON) file for any business in seconds.
+
+## What it does
+
+- Takes basic business inputs:
+  - Business name  
+  - Website URL  
+  - Category  
+  - Contact info  
+  - Short description
+- Outputs a valid DJSON file based on the official `djson-standard`
+- Lets you download the file or copy it to clipboard
+- Captures email for follow‑up
+- Sends users to a **human audit** at [digitaljson.com](https://digitaljson.com)
+
+## Why it exists
+
+Most businesses are not AI‑ready.  
+GetDJSON gives them a fast, free starting point — then offers a paid audit and setup.
+
+## Next step
+
+After generating your DJSON file, you’ll see:
+
+> “Get a human audit → digitaljson.com”
+
+That’s where the $99+ audit and setup live.
