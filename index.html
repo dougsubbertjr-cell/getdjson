@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GetDJSON — Free Digital JSON Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px; }
+    h1 { margin-bottom: 8px; }
+    label { display: block; margin-top: 12px; font-weight: 600; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 4px; }
+    button { margin-top: 16px; padding: 10px 16px; cursor: pointer; }
+    pre { background: #f5f5f5; padding: 12px; margin-top: 16px; overflow-x: auto; }
+    .cta { margin-top: 24px; padding: 12px; background: #eef6ff; border: 1px solid #c3d9ff; }
+  </style>
+</head>
+<body>
+  <h1>GetDJSON</h1>
+  <p>Generate a valid Digital JSON (DJSON) file for your business in seconds.</p>
+
+  <form id="djson-form">
+    <label>Business Name
+      <input type="text" id="businessName" required />
+    </label>
+
+    <label>Website URL
+      <input type="url" id="websiteUrl" required />
+    </label>
+
+    <label>Category
+      <input type="text" id="category" required />
+    </label>
+
+    <label>Contact Email
+      <input type="email" id="contactEmail" required />
+    </label>
+
+    <label>Contact Phone
+      <input type="text" id="contactPhone" />
+    </label>
+
+    <label>Location (City, State)
+      <input type="text" id="location" />
+    </label>
+
+    <label>Short Description
+      <textarea id="description" rows="3" required></textarea>
+    </label>
+
+    <label>Your Email (for follow‑up)
+      <input type="email" id="userEmail" required />
+    </label>
+
+    <button type="submit">Generate DJSON</button>
+  </form>
+
+  <pre id="output" style="display:none;"></pre>
+
+  <button id="copyBtn" style="display:none;">Copy to Clipboard</button>
+  <button id="downloadBtn" style="display:none;">Download DJSON File</button>
+
+  <div class="cta" id="cta" style="display:none;">
+    <strong>Next step:</strong>  
+    <p>Get a human audit of your site and DJSON file.</p>
+    <p><a href="https://digitaljson.com" target="_blank">Get a human audit → digitaljson.com</a></p>
+  </div>
+
+  <!-- Simple Formspree email capture (replace with your endpoint) -->
+  <form id="lead-form" action="https://formspree.io/f/your-form-id" method="POST" style="display:none;">
+    <input type="hidden" name="email" id="leadEmail" />
+    <input type="hidden" name="business" id="leadBusiness" />
+    <input type="hidden" name="website" id="leadWebsite" />
+  </form>
+
+  <script>
+    const form = document.getElementById('djson-form');
+    const output = document.getElementById('output');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const cta = document.getElementById('cta');
+    const leadForm = document.getElementById('lead-form');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const businessName = document.getElementById('businessName').value.trim();
+      const websiteUrl = document.getElementById('websiteUrl').value.trim();
+      const category = document.getElementById('category').value.trim();
+      const contactEmail = document.getElementById('contactEmail').value.trim();
+      const contactPhone = document.getElementById('contactPhone').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const userEmail = document.getElementById('userEmail').value.trim();
+
+      const djson = {
+        version: "0.1.0",
+        business: {
+          name: businessName,
+          category: category,
+          description: description
+        },
+        contact: {
+          website: websiteUrl,
+          email: contactEmail,
+          phone: contactPhone,
+          location: location
+        },
+        offer: {
+          primary: "",
+          secondary: [],
+          pricing: ""
+        },
+        content: {
+          about: description,
+          services: [],
+          faq: []
+        },
+        signals: {
+          reviews: [],
+          social: [],
+          trust: []
+        },
+        compliance: {
+          terms: "",
+          privacy: ""
+        }
+      };
+
+      const jsonString = JSON.stringify(djson, null, 2);
+      output.textContent = jsonString;
+      output.style.display = 'block';
+      copyBtn.style.display = 'inline-block';
+      downloadBtn.style.display = 'inline-block';
+      cta.style.display = 'block';
+
+      // Lead capture
+      document.getElementById('leadEmail').value = userEmail;
+      document.getElementById('leadBusiness').value = businessName;
+      document.getElementById('leadWebsite').value = websiteUrl;
+      leadForm.submit();
+    });
+
+    copyBtn.addEventListener('click', function() {
+      navigator.clipboard.writeText(output.textContent);
+      alert('DJSON copied to clipboard.');
+    });
+
+    downloadBtn.addEventListener('click', function() {
+      const blob = new Blob([output.textContent], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'digitaljson.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
