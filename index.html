@@ -129,7 +129,25 @@
 
   <button type="button" id="copyBtn" class="secondary" hidden>Copy to Clipboard</button>
   <button type="button" id="downloadBtn" class="secondary" hidden>Download DJSON File</button>
+<!-- One-Click Deployment Snippets UI -->
+<div id="hosting-snippets" style="margin-top: 2rem; text-align: left;" hidden>
+  <h3>Deployment Instructions</h3>
+  <p style="font-size: 0.9rem; color: #888;">Place your generated <code>.djson</code> file at the root of your web server (<code>https://yourdomain.com/djson.json</code>) or inside <code>/.well-known/djson.json</code>.</p>
+  
+  <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+    <button type="button" class="tab-btn active" onclick="switchSnippet('htaccess')">Apache (.htaccess)</button>
+    <button type="button" class="tab-btn" onclick="switchSnippet('nginx')">Nginx</button>
+    <button type="button" class="tab-btn" onclick="switchSnippet('robots')">robots.txt</button>
+  </div>
 
+  <pre id="snippet-code" style="background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.85rem;"><code># Apache Rewrite Snippet
+<IfModule mod_headers.c>
+  <Files "djson.json">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Content-Type "application/json; charset=utf-8"
+  </Files>
+</IfModule></code></pre>
+</div>
   <div class="cta" id="cta" hidden>
     <strong>Next step</strong>
     <p>Get a human audit of your site and DJSON file ($99+).</p>
