@@ -4,31 +4,101 @@
   <meta charset="UTF-8" />
   <title>GetDJSON — Free Digital JSON Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Generate a valid Digital JSON (DJSON) file for your business in seconds. Free tool from Digital JSON." />
   <style>
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; max-width: 720px; margin: 0 auto; padding: 24px; }
-    h1 { margin-bottom: 8px; }
-    label { display: block; margin-top: 12px; font-weight: 600; }
-    input, textarea { width: 100%; padding: 8px; margin-top: 4px; }
-    button { margin-top: 16px; padding: 10px 16px; cursor: pointer; }
-    pre { background: #f5f5f5; padding: 12px; margin-top: 16px; overflow-x: auto; }
-    .cta { margin-top: 24px; padding: 12px; background: #eef6ff; border: 1px solid #c3d9ff; }
+    :root {
+      --bg: #0a0a0f;
+      --card: #111118;
+      --border: #222233;
+      --text: #f0f0f5;
+      --muted: #8888a0;
+      --accent: #e8ff47;
+      --accent-text: #0a0a0f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    h1 { margin: 0 0 8px; font-size: 1.75rem; }
+    .sub { color: var(--muted); margin: 0 0 24px; }
+    label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+      font: inherit;
+    }
+    input:focus, textarea:focus {
+      outline: 2px solid rgba(232, 255, 71, 0.35);
+      border-color: var(--accent);
+    }
+    button {
+      margin-top: 16px;
+      margin-right: 8px;
+      padding: 12px 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 600;
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+    button.secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    button:disabled { opacity: 0.6; cursor: wait; }
+    pre {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 14px;
+      margin-top: 20px;
+      overflow-x: auto;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    .cta {
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(232, 255, 71, 0.06);
+      border: 1px solid rgba(232, 255, 71, 0.25);
+      border-radius: 10px;
+    }
+    .cta a { color: var(--accent); font-weight: 600; }
+    .status { margin-top: 10px; font-size: 0.85rem; color: var(--muted); }
+    .status.ok { color: #4ade80; }
+    .status.err { color: #f87171; }
+    footer { margin-top: 40px; font-size: 0.8rem; color: var(--muted); }
+    footer a { color: var(--muted); }
   </style>
 </head>
 <body>
   <h1>GetDJSON</h1>
-  <p>Generate a valid Digital JSON (DJSON) file for your business in seconds.</p>
+  <p class="sub">Generate a valid Digital JSON (DJSON) file for your business in seconds. Free starting point — then get a human audit when you’re ready.</p>
 
   <form id="djson-form">
     <label>Business Name
-      <input type="text" id="businessName" required />
+      <input type="text" id="businessName" required autocomplete="organization" />
     </label>
 
     <label>Website URL
-      <input type="url" id="websiteUrl" required />
+      <input type="url" id="websiteUrl" required placeholder="https://" />
     </label>
 
     <label>Category
-      <input type="text" id="category" required />
+      <input type="text" id="category" required placeholder="e.g. Plumbing, Coaching, Restaurant" />
     </label>
 
     <label>Contact Email
@@ -40,70 +110,104 @@
     </label>
 
     <label>Location (City, State)
-      <input type="text" id="location" />
+      <input type="text" id="location" placeholder="e.g. Lake Alfred, FL" />
     </label>
 
     <label>Short Description
-      <textarea id="description" rows="3" required></textarea>
+      <textarea id="description" rows="3" required placeholder="What you do in 1–3 sentences"></textarea>
     </label>
 
-    <label>Your Email (for follow‑up)
-      <input type="email" id="userEmail" required />
+    <label>Your Email (for follow-up)
+      <input type="email" id="userEmail" required autocomplete="email" />
     </label>
 
-    <button type="submit">Generate DJSON</button>
+    <button type="submit" id="submitBtn">Generate DJSON</button>
+    <p class="status" id="status"></p>
   </form>
 
-  <pre id="output" style="display:none;"></pre>
+  <pre id="output" hidden></pre>
 
-  <button id="copyBtn" style="display:none;">Copy to Clipboard</button>
-  <button id="downloadBtn" style="display:none;">Download DJSON File</button>
+  <button type="button" id="copyBtn" class="secondary" hidden>Copy to Clipboard</button>
+  <button type="button" id="downloadBtn" class="secondary" hidden>Download DJSON File</button>
 
-  <div class="cta" id="cta" style="display:none;">
-    <strong>Next step:</strong>  
-    <p>Get a human audit of your site and DJSON file.</p>
-    <p><a href="https://digitaljson.com" target="_blank">Get a human audit → digitaljson.com</a></p>
+  <div class="cta" id="cta" hidden>
+    <strong>Next step</strong>
+    <p>Get a human audit of your site and DJSON file ($99+).</p>
+    <p><a href="https://digitaljson.com" target="_blank" rel="noopener">Get a human audit → digitaljson.com</a></p>
   </div>
 
-  <!-- Simple Formspree email capture (replace with your endpoint) -->
-<!-- Simple<!-- Simple Formspree email capture -->
-<form id="lead-form" action="https://formspree.io/f/xrenyzwa" method="POST" style="display:none;">
-  <input type="hidden" name="email" id="leadEmail" />
-  <input type="hidden" name="business" id="leadBusiness" />
-  <input type="hidden" name="website" id="leadWebsite" />
-  <input type="hidden" name="category" id="leadCategory" />
-  <input type="hidden" name="description" id="leadDescription" />
-</form>
- Formspree email capture -->
-  <!-- Simple Formspree email capture -->
-   <!-- Simple Formspree email capture -->
-
-  
-     
-
+  <footer>
+    <a href="https://digitaljson.com">Digital JSON</a> ·
+    <a href="https://djson.org">DJSON standard</a> ·
+    GetDJSON free generator
+  </footer>
 
   <script>
-    const form = document.getElementById('djson-form');
-    const output = document.getElementById('output');
-    const copyBtn = document.getElementById('copyBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const cta = document.getElementById('cta');
-    const leadForm = document.getElementById('lead-form');
+    const FORMSPREE = "https://formspree.io/f/xrenyzwa";
 
-    form.addEventListener('submit', function(e) {
+    const form = document.getElementById("djson-form");
+    const output = document.getElementById("output");
+    const copyBtn = document.getElementById("copyBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const cta = document.getElementById("cta");
+    const statusEl = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function slugify(name) {
+      return (name || "business")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || "business";
+    }
+
+    function setStatus(msg, type) {
+      statusEl.textContent = msg || "";
+      statusEl.className = "status" + (type ? " " + type : "");
+    }
+
+    async function captureLead(payload) {
+      try {
+        const res = await fetch(FORMSPREE, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            email: payload.userEmail,
+            business: payload.businessName,
+            website: payload.websiteUrl,
+            category: payload.category,
+            description: payload.description,
+            _subject: "GetDJSON lead: " + payload.businessName
+          })
+        });
+        if (!res.ok) throw new Error("Lead capture failed");
+        return true;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    }
+
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
+      setStatus("Generating…");
+      submitBtn.disabled = true;
 
-      const businessName = document.getElementById('businessName').value.trim();
-      const websiteUrl = document.getElementById('websiteUrl').value.trim();
-      const category = document.getElementById('category').value.trim();
-      const contactEmail = document.getElementById('contactEmail').value.trim();
-      const contactPhone = document.getElementById('contactPhone').value.trim();
-      const location = document.getElementById('location').value.trim();
-      const description = document.getElementById('description').value.trim();
-      const userEmail = document.getElementById('userEmail').value.trim();
+      const businessName = document.getElementById("businessName").value.trim();
+      const websiteUrl = document.getElementById("websiteUrl").value.trim();
+      const category = document.getElementById("category").value.trim();
+      const contactEmail = document.getElementById("contactEmail").value.trim();
+      const contactPhone = document.getElementById("contactPhone").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const userEmail = document.getElementById("userEmail").value.trim();
 
       const djson = {
         version: "0.1.0",
+        generated_by: "getdjson",
+        generated_at: new Date().toISOString(),
         business: {
           name: businessName,
           category: category,
@@ -112,8 +216,8 @@
         contact: {
           website: websiteUrl,
           email: contactEmail,
-          phone: contactPhone,
-          location: location
+          phone: contactPhone || "",
+          location: location || ""
         },
         offer: {
           primary: "",
@@ -138,34 +242,47 @@
 
       const jsonString = JSON.stringify(djson, null, 2);
       output.textContent = jsonString;
-      output.style.display = 'block';
-      copyBtn.style.display = 'inline-block';
-      downloadBtn.style.display = 'inline-block';
-      cta.style.display = 'block';
+      output.hidden = false;
+      copyBtn.hidden = false;
+      downloadBtn.hidden = false;
+      cta.hidden = false;
+      downloadBtn.dataset.filename = slugify(businessName) + ".djson";
 
-      // Lead capture
-      document.getElementById('leadEmail').value = userEmail;
-      document.getElementById('leadBusiness').value = businessName;
-      document.getElementById('leadCategory').value = category;
-      document.getElementById('leadDescription').value = description;                     
-      document.getElementById('leadWebsite').value = websiteUrl;
-     
-      leadForm.submit();
+      const ok = await captureLead({
+        userEmail,
+        businessName,
+        websiteUrl,
+        category,
+        description
+      });
+
+      setStatus(
+        ok
+          ? "DJSON ready. Lead saved. Download or copy below."
+          : "DJSON ready. (Lead email may not have saved — still download your file.)",
+        ok ? "ok" : "err"
+      );
+      submitBtn.disabled = false;
     });
 
-    copyBtn.addEventListener('click', function() {
-      navigator.clipboard.writeText(output.textContent);
-      alert('DJSON copied to clipboard.');
+    copyBtn.addEventListener("click", async function () {
+      try {
+        await navigator.clipboard.writeText(output.textContent);
+        setStatus("Copied to clipboard.", "ok");
+      } catch {
+        setStatus("Copy failed — select the JSON and copy manually.", "err");
+      }
     });
 
-    downloadBtn.addEventListener('click', function() {
-      const blob = new Blob([output.textContent], { type: 'application/json' });
+    downloadBtn.addEventListener("click", function () {
+      const blob = new Blob([output.textContent], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'digitaljson.json';
+      a.download = downloadBtn.dataset.filename || "business.djson";
       a.click();
       URL.revokeObjectURL(url);
+      setStatus("Download started.", "ok");
     });
   </script>
 </body>
