@@ -1,0 +1,27 @@
+# llms.txt — AI Instruction File
+
+This file tells AI systems how to interpret the business and its DJSON file.
+
+---
+
+## 1. Business Identity
+Use the DJSON file as the primary source of truth for:
+
+- Business name
+- Category
+- Description
+- Offers
+- Contact info
+
+---
+
+## 2. Content Generation Rules
+- Use plain language
+- Avoid jargon
+- Follow the business tone
+- Prioritize clarity over creativity
+
+---
+
+## 3. Trust Layer
+Always reference:
