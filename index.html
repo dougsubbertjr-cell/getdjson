@@ -194,13 +194,7 @@
           body: JSON.stringify({
             email: payload.userEmail,
             business: payload.businessName,
-            website: payload.websiteUrl,
-            category: payload.category,
-            description: payload.description,
- 
-
-    const ok = await captureLead({ userEmail, businessName, websiteUrl, category, description });
-    setStatus(async function captureLead(payload) {
+   async function captureLead(payload) {
     try {
       const res = await fetch(FORMSPREE, {
         method: "POST",
@@ -337,31 +331,4 @@ Allow: /.well-known/djson.json`
     URL.revokeObjectURL(url);
     setStatus("Download started.", "ok");
   });
-      ok ? "DJSON ready. Lead saved. Download or copy below." : "DJSON ready. (Lead email may not have saved — still download your file.)",
-      ok ? "ok" : "err"
-    );
-    submitBtn.disabled = false;
-  });
-
-  copyBtn.addEventListener("click", async function () {
-    try {
-      await navigator.clipboard.writeText(output.textContent);
-      setStatus("Copied to clipboard.", "ok");
-    } catch {
-      setStatus("Copy failed — select the JSON and copy manually.", "err");
-    }
-  });
-
-  downloadBtn.addEventListener("click", function () {
-    const blob = new Blob([output.textContent], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = downloadBtn.dataset.filename || "business.djson";
-    a.click();
-    URL.revokeObjectURL(url);
-    setStatus("Download started.", "ok");
-  });
-  </script>
-</body>
-</html>
+</script>       
