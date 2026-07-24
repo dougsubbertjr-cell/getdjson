@@ -183,18 +183,7 @@
       statusEl.className = "status" + (type ? " " + type : "");
     }
 
-    async function captureLead(payload) {
-      try {
-        const res = await fetch(FORMSPREE, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-          },
-          body: JSON.stringify({
-            email: payload.userEmail,
-            business: payload.businessName,
-   async function captureLead(payload) {
+async function captureLead(payload) {
     try {
       const res = await fetch(FORMSPREE, {
         method: "POST",
@@ -331,4 +320,4 @@ Allow: /.well-known/djson.json`
     URL.revokeObjectURL(url);
     setStatus("Download started.", "ok");
   });
-</script>       
+</script>
