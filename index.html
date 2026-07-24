@@ -197,16 +197,57 @@
             website: payload.websiteUrl,
             category: payload.category,
             description: payload.description,
-            _subject: "GetDJSON lead: " + payload.businessName
-          })
-        });
-        if (!res.ok) throw new Error("Lead capture failed");
-        return true;
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
+ 
+
+    const ok = await captureLead({ userEmail, businessName, websiteUrl, category, description });
+    setStatus(async function captureLead(payload) {
+    try {
+      const res = await fetch(FORMSPREE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          email: payload.userEmail,
+          business: payload.businessName,
+          website: payload.websiteUrl,
+          category: payload.category,
+          description: payload.description,
+          _subject: "GetDJSON lead: " + payload.businessName
+        })
+      });
+      if (!res.ok) throw new Error("Lead capture failed");
+      return true;
+    } catch (err) {
+      console.warn(err);
+      return false;
     }
+  }
+
+  // Deployment Snippets Data
+  const snippets = {
+    htaccess: `# Apache .htaccess Config
+<IfModule mod_headers.c>
+  <Files "djson.json">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Content-Type "application/json; charset=utf-8"
+  </Files>
+</IfModule>`,
+    nginx: `# Nginx Config Block
+location /djson.json {
+    add_header Access-Control-Allow-Origin "*";
+    default_type application/json;
+}`,
+    robots: `# Add to your robots.txt file
+User-agent: *
+Allow: /djson.json
+Allow: /.well-known/djson.json`
+  };
+
+  function switchSnippet(type) {
+    const codeEl = document.querySelector("#snippet-code code");
+    if (codeEl && snippets[type]) {
+      codeEl.textContent = snippets[type];
+    }
+  }
 
   // 1. Fetch live schema from djson-standard repository
   async function loadDjsonSchema() {
@@ -262,10 +303,40 @@
     copyBtn.hidden = false;
     downloadBtn.hidden = false;
     cta.hidden = false;
+
+    // Reveal hosting snippets UI
+    const snippetsEl = document.getElementById("hosting-snippets");
+    if (snippetsEl) snippetsEl.hidden = false;
+
     downloadBtn.dataset.filename = slugify(businessName) + ".djson";
 
     const ok = await captureLead({ userEmail, businessName, websiteUrl, category, description });
     setStatus(
+      ok ? "DJSON ready. Lead saved. Download or copy below." : "DJSON ready. (Lead email may not have saved — still download your file.)",
+      ok ? "ok" : "err"
+    );
+    submitBtn.disabled = false;
+  });
+
+  copyBtn.addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(output.textContent);
+      setStatus("Copied to clipboard.", "ok");
+    } catch {
+      setStatus("Copy failed — select the JSON and copy manually.", "err");
+    }
+  });
+
+  downloadBtn.addEventListener("click", function () {
+    const blob = new Blob([output.textContent], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = downloadBtn.dataset.filename || "business.djson";
+    a.click();
+    URL.revokeObjectURL(url);
+    setStatus("Download started.", "ok");
+  });
       ok ? "DJSON ready. Lead saved. Download or copy below." : "DJSON ready. (Lead email may not have saved — still download your file.)",
       ok ? "ok" : "err"
     );
