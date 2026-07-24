@@ -1,0 +1,40 @@
+
+Increment only when schema changes.
+
+---
+
+## 4. Validation
+Use any JSON validator:
+
+- jsonlint.com
+- VSCode JSON validator
+- GetDJSON validator (coming soon)
+
+---
+
+## 5. Maintenance
+Update when:
+- Offers change
+- Pricing changes
+- Services change
+- Contact info changes
+- New trust signals appear
+
+---
+
+## 6. AI Usage
+LLMs use DJSON to:
+
+- Understand business identity
+- Improve accuracy
+- Reduce hallucinations
+- Generate better content
+- Power agents
+
+---
+
+## 7. Common Issues
+- Missing fields  
+- Wrong version  
+- Invalid JSON  
+- Incorrect hosting path  
