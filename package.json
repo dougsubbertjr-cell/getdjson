@@ -1,0 +1,14 @@
+{
+  "name": "getdjson",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A secure, accessible, dependency-free static DJSON v0.1.0 browser generator.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

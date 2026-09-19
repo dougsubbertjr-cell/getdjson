@@ -1,323 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>GetDJSON — Free Digital JSON Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Generate a valid Digital JSON (DJSON) file for your business in seconds. Free tool from Digital JSON." />
-  <style>
-    :root {
-      --bg: #0a0a0f;
-      --card: #111118;
-      --border: #222233;
-      --text: #f0f0f5;
-      --muted: #8888a0;
-      --accent: #e8ff47;
-      --accent-text: #0a0a0f;
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 24px;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-    h1 { margin: 0 0 8px; font-size: 1.75rem; }
-    .sub { color: var(--muted); margin: 0 0 24px; }
-    label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
-    input, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      margin-top: 6px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--card);
-      color: var(--text);
-      font: inherit;
-    }
-    input:focus, textarea:focus {
-      outline: 2px solid rgba(232, 255, 71, 0.35);
-      border-color: var(--accent);
-    }
-    button {
-      margin-top: 16px;
-      margin-right: 8px;
-      padding: 12px 18px;
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      font: inherit;
-      font-weight: 600;
-      background: var(--accent);
-      color: var(--accent-text);
-    }
-    button.secondary {
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    button:disabled { opacity: 0.6; cursor: wait; }
-    pre {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 14px;
-      margin-top: 20px;
-      overflow-x: auto;
-      border-radius: 8px;
-      font-size: 0.85rem;
-    }
-    .cta {
-      margin-top: 24px;
-      padding: 16px;
-      background: rgba(232, 255, 71, 0.06);
-      border: 1px solid rgba(232, 255, 71, 0.25);
-      border-radius: 10px;
-    }
-    .cta a { color: var(--accent); font-weight: 600; }
-    .status { margin-top: 10px; font-size: 0.85rem; color: var(--muted); }
-    .status.ok { color: #4ade80; }
-    .status.err { color: #f87171; }
-    footer { margin-top: 40px; font-size: 0.8rem; color: var(--muted); }
-    footer a { color: var(--muted); }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create a local DJSON v0.1.0 business document in your browser. No data is sent by default.">
+  <meta name="referrer" content="no-referrer">
+  <title>GetDJSON — Local DJSON v0.1.0 generator</title>
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-  <h1>GetDJSON</h1>
-  <p class="sub">Generate a valid Digital JSON (DJSON) file for your business in seconds. Free starting point — then get a human audit when you’re ready.</p>
+  <a class="skip-link" href="#generator">Skip to generator</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="./" aria-label="GetDJSON home">get<span>djson</span></a>
+      <p class="eyebrow">Local-first DJSON v0.1.0 generator</p>
+    </div>
+  </header>
 
-  <form id="djson-form">
-    <label>Business Name
-      <input type="text" id="businessName" required autocomplete="organization" />
-    </label>
+  <main id="generator" class="wrap layout" tabindex="-1">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="kicker">Structured business identity</p>
+      <h1 id="page-title">Make a DJSON file without sending us your business data.</h1>
+      <p class="lede">Enter the basics, review the generated DJSON v0.1.0 document, then copy or save it. Generation happens entirely in this browser.</p>
+      <aside class="privacy-note" aria-label="Privacy promise">
+        <strong>Private by default.</strong> This app has no analytics, no remote schema fetch, and no built-in lead submission. Read the <a href="PRIVACY.md">privacy details</a>.
+      </aside>
+    </section>
 
-    <label>Website URL
-      <input type="url" id="websiteUrl" required placeholder="https://" />
-    </label>
+    <div class="workspace">
+      <section class="panel form-panel" aria-labelledby="details-heading">
+        <h2 id="details-heading">Business details</h2>
+        <p class="panel-intro"><span aria-hidden="true">*</span> Required to create a useful DJSON document.</p>
 
-    <label>Category
-      <input type="text" id="category" required placeholder="e.g. Plumbing, Coaching, Restaurant" />
-    </label>
+        <form id="djson-form" novalidate>
+          <div class="field">
+            <label for="business-name">Business name <span aria-hidden="true">*</span></label>
+            <input id="business-name" name="name" type="text" autocomplete="organization" required aria-describedby="business-name-error">
+            <p class="field-error" id="business-name-error"></p>
+          </div>
 
-    <label>Contact Email
-      <input type="email" id="contactEmail" required />
-    </label>
+          <div class="field">
+            <label for="website">Public website <span aria-hidden="true">*</span></label>
+            <input id="website" name="website" type="text" inputmode="url" autocomplete="url" placeholder="example.com" required aria-describedby="website-help website-error">
+            <p class="field-help" id="website-help">A domain is enough; it will be saved as HTTPS.</p>
+            <p class="field-error" id="website-error"></p>
+          </div>
 
-    <label>Contact Phone
-      <input type="text" id="contactPhone" />
-    </label>
+          <div class="field">
+            <label for="category">Category <span aria-hidden="true">*</span></label>
+            <input id="category" name="category" type="text" autocomplete="organization-title" placeholder="For example, accounting firm" required aria-describedby="category-error">
+            <p class="field-error" id="category-error"></p>
+          </div>
 
-    <label>Location (City, State)
-      <input type="text" id="location" placeholder="e.g. Lake Alfred, FL" />
-    </label>
+          <div class="field">
+            <label for="description">Short description <span aria-hidden="true">*</span></label>
+            <textarea id="description" name="description" rows="4" required aria-describedby="description-help description-error" placeholder="What does your business do, and for whom?"></textarea>
+            <p class="field-help" id="description-help">Use one or two plain-language sentences.</p>
+            <p class="field-error" id="description-error"></p>
+          </div>
 
-    <label>Short Description
-      <textarea id="description" rows="3" required placeholder="What you do in 1–3 sentences"></textarea>
-    </label>
+          <fieldset class="optional-fields">
+            <legend>Optional contact details</legend>
+            <div class="field">
+              <label for="contact-email">Business contact email</label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" aria-describedby="contact-email-error">
+              <p class="field-error" id="contact-email-error"></p>
+            </div>
+            <div class="two-col">
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" autocomplete="tel">
+              </div>
+              <div class="field">
+                <label for="location">Location</label>
+                <input id="location" name="location" type="text" autocomplete="address-level2" placeholder="City, region">
+              </div>
+            </div>
+          </fieldset>
 
-    <label>Your Email (for follow-up)
-      <input type="email" id="userEmail" required autocomplete="email" />
-    </label>
+          <button class="button primary" type="submit">Generate DJSON</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
 
-    <button type="submit" id="submitBtn">Generate DJSON</button>
-    <p class="status" id="status"></p>
-  </form>
+      <section class="panel output-panel" aria-labelledby="output-heading">
+        <div class="output-heading">
+          <div>
+            <h2 id="output-heading">Your DJSON document</h2>
+            <p id="output-help">Your generated JSON will appear here for review.</p>
+          </div>
+          <span class="version-badge">v0.1.0</span>
+        </div>
+        <pre id="output" class="code-output" tabindex="0" aria-describedby="output-help" aria-label="Generated DJSON output">{
+  "djson_version": "0.1.0",
+  "business": { }
+}</pre>
+        <div class="actions" aria-label="DJSON actions">
+          <button id="copy-button" class="button secondary" type="button" disabled>Copy DJSON</button>
+          <button id="download-button" class="button secondary" type="button" disabled>Download .djson</button>
+        </div>
+        <p class="action-status" id="action-status" role="status" aria-live="polite"></p>
 
-  <pre id="output" hidden></pre>
+        <details class="placement-guide">
+          <summary>Where should I put the file?</summary>
+          <p>Save it at a stable public URL such as <code>/djson.json</code> or <code>/.well-known/djson.json</code>. Serve it as <code>application/json; charset=utf-8</code> and update it when business details change.</p>
+        </details>
+      </section>
+    </div>
 
-  <button type="button" id="copyBtn" class="secondary" hidden>Copy to Clipboard</button>
-  <button type="button" id="downloadBtn" class="secondary" hidden>Download DJSON File</button>
-<!-- One-Click Deployment Snippets UI -->
-<div id="hosting-snippets" style="margin-top: 2rem; text-align: left;" hidden>
-  <h3>Deployment Instructions</h3>
-  <p style="font-size: 0.9rem; color: #888;">Place your generated <code>.djson</code> file at the root of your web server (<code>https://yourdomain.com/djson.json</code>) or inside <code>/.well-known/djson.json</code>.</p>
-  
-  <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-    <button type="button" class="tab-btn active" onclick="switchSnippet('htaccess')">Apache (.htaccess)</button>
-    <button type="button" class="tab-btn" onclick="switchSnippet('nginx')">Nginx</button>
-    <button type="button" class="tab-btn" onclick="switchSnippet('robots')">robots.txt</button>
-  </div>
+    <section class="audit-cta" aria-labelledby="audit-heading">
+      <div>
+        <p class="kicker">Need a second set of eyes?</p>
+        <h2 id="audit-heading">Ask a human to review the file and your public presence.</h2>
+        <p>A human audit can check whether the information is complete, clear, and aligned with what customers find on your site.</p>
+      </div>
+      <a class="button primary audit-link" href="https://digitaljson.com" target="_blank" rel="noopener noreferrer">Request a human audit <span aria-hidden="true">↗</span></a>
+    </section>
 
-  <pre id="snippet-code" style="background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.85rem;"><code># Apache Rewrite Snippet
-<IfModule mod_headers.c>
-  <Files "djson.json">
-    Header set Access-Control-Allow-Origin "*"
-    Header set Content-Type "application/json; charset=utf-8"
-  </Files>
-</IfModule></code></pre>
-</div>
-  <div class="cta" id="cta" hidden>
-    <strong>Next step</strong>
-    <p>Get a human audit of your site and DJSON file ($99+).</p>
-    <p><a href="https://digitaljson.com" target="_blank" rel="noopener">Get a human audit → digitaljson.com</a></p>
-  </div>
+    <details class="lead-capture" id="lead-capture">
+      <summary>Optional: configure a lead-capture integration</summary>
+      <p>This is off by default. If an operator knowingly enables it, their site must clearly disclose the destination, purpose, and retention rules before any contact data is collected. The generator includes no endpoint and sends no data.</p>
+      <label for="lead-endpoint">Configured endpoint (informational only)</label>
+      <input id="lead-endpoint" type="url" inputmode="url" placeholder="https://your-domain.example/consented-lead-endpoint" autocomplete="off">
+      <p class="field-help">This field is not submitted, stored, or used by this app. See <a href="DEPLOYMENT.md#optional-consented-lead-capture">deployment guidance</a>.</p>
+    </details>
+  </main>
 
-  <footer>
-    <a href="https://digitaljson.com">Digital JSON</a> ·
-    <a href="https://djson.org">DJSON standard</a> ·
-    GetDJSON free generator
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>GetDJSON is a static, dependency-free browser app.</p>
+      <nav aria-label="Footer">
+        <a href="README.md">Documentation</a>
+        <a href="PRIVACY.md">Privacy</a>
+        <a href="DEPLOYMENT.md">Deployment</a>
+      </nav>
+    </div>
   </footer>
 
-  <script>
-    const FORMSPREE = "https://formspree.io/f/xrenyzwa";
-
-    const form = document.getElementById("djson-form");
-    const output = document.getElementById("output");
-    const copyBtn = document.getElementById("copyBtn");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const cta = document.getElementById("cta");
-    const statusEl = document.getElementById("status");
-    const submitBtn = document.getElementById("submitBtn");
-
-    function slugify(name) {
-      return (name || "business")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "") || "business";
-    }
-
-    function setStatus(msg, type) {
-      statusEl.textContent = msg || "";
-      statusEl.className = "status" + (type ? " " + type : "");
-    }
-
-async function captureLead(payload) {
-    try {
-      const res = await fetch(FORMSPREE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          email: payload.userEmail,
-          business: payload.businessName,
-          website: payload.websiteUrl,
-          category: payload.category,
-          description: payload.description,
-          _subject: "GetDJSON lead: " + payload.businessName
-        })
-      });
-      if (!res.ok) throw new Error("Lead capture failed");
-      return true;
-    } catch (err) {
-      console.warn(err);
-      return false;
-    }
-  }
-
-  // Deployment Snippets Data
-  const snippets = {
-    htaccess: `# Apache .htaccess Config
-<IfModule mod_headers.c>
-  <Files "djson.json">
-    Header set Access-Control-Allow-Origin "*"
-    Header set Content-Type "application/json; charset=utf-8"
-  </Files>
-</IfModule>`,
-    nginx: `# Nginx Config Block
-location /djson.json {
-    add_header Access-Control-Allow-Origin "*";
-    default_type application/json;
-}`,
-    robots: `# Add to your robots.txt file
-User-agent: *
-Allow: /djson.json
-Allow: /.well-known/djson.json`
-  };
-
-  function switchSnippet(type) {
-    const codeEl = document.querySelector("#snippet-code code");
-    if (codeEl && snippets[type]) {
-      codeEl.textContent = snippets[type];
-    }
-  }
-
-  // 1. Fetch live schema from djson-standard repository
-  async function loadDjsonSchema() {
-    const schemaUrl = "https://raw.githubusercontent.com/dougsubbertjr-cell/djson-standard/main/schema.json";
-    try {
-      const res = await fetch(schemaUrl);
-      if (!res.ok) throw new Error("Could not load schema");
-      return await res.json();
-    } catch (err) {
-      console.warn("Schema load failed, using fallback standard.", err);
-      return null;
-    }
-  }
-
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    setStatus("Connecting to DJSON standard...");
-    submitBtn.disabled = true;
-
-    // Fetch schema link on submit
-    const schema = await loadDjsonSchema();
-
-    const businessName = document.getElementById("businessName").value.trim();
-    const websiteUrl = document.getElementById("websiteUrl").value.trim();
-    const category = document.getElementById("category").value.trim();
-    const contactEmail = document.getElementById("contactEmail").value.trim();
-    const contactPhone = document.getElementById("contactPhone").value.trim();
-    const location = document.getElementById("location").value.trim();
-    const description = document.getElementById("description").value.trim();
-    const userEmail = document.getElementById("userEmail").value.trim();
-
-    const djson = {
-      $schema: "https://raw.githubusercontent.com/dougsubbertjr-cell/djson-standard/main/schema.json",
-      version: schema?.properties?.djson_version?.example || "1.0",
-      generated_by: "getdjson",
-      generated_at: new Date().toISOString(),
-      business: {
-        name: businessName,
-        category: category,
-        description: description
-      },
-      contact: {
-        website: websiteUrl,
-        email: contactEmail,
-        phone: contactPhone || "",
-        location: location || ""
-      }
-    };
-
-    const jsonString = JSON.stringify(djson, null, 2);
-    output.textContent = jsonString;
-    output.hidden = false;
-    copyBtn.hidden = false;
-    downloadBtn.hidden = false;
-    cta.hidden = false;
-
-    // Reveal hosting snippets UI
-    const snippetsEl = document.getElementById("hosting-snippets");
-    if (snippetsEl) snippetsEl.hidden = false;
-
-    downloadBtn.dataset.filename = slugify(businessName) + ".djson";
-
-    const ok = await captureLead({ userEmail, businessName, websiteUrl, category, description });
-    setStatus(
-      ok ? "DJSON ready. Lead saved. Download or copy below." : "DJSON ready. (Lead email may not have saved — still download your file.)",
-      ok ? "ok" : "err"
-    );
-    submitBtn.disabled = false;
-  });
-
-  copyBtn.addEventListener("click", async function () {
-    try {
-      await navigator.clipboard.writeText(output.textContent);
-      setStatus("Copied to clipboard.", "ok");
-    } catch {
-      setStatus("Copy failed — select the JSON and copy manually.", "err");
-    }
-  });
-
-  downloadBtn.addEventListener("click", function () {
-    const blob = new Blob([output.textContent], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = downloadBtn.dataset.filename || "business.djson";
-    a.click();
-    URL.revokeObjectURL(url);
-    setStatus("Download started.", "ok");
-  });
-</script>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>
