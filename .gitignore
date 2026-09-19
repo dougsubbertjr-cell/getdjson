@@ -1,0 +1,29 @@
+# Dependencies and package manager output
+node_modules/
+.pnpm-store/
+.npm/
+
+# Local environment and deployment credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs and coverage
+*.log
+coverage/
+.nyc_output/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build and local server output
+dist/
+build/
+.tmp/
